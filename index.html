@@ -2,438 +2,1105 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CinePulse - Firebase Sync</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0f171e">
+    <title>DoveEroRimasto</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%2300A8E1'/%3E%3Cpath d='M40 30 L72 50 L40 70 Z' fill='%23ffffff'/%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #0b0f19;
-            --card-bg: #131b2e;
-            --card-hover: #1a2540;
-            --text-color: #f1f5f9;
-            --text-muted: #94a3b8;
-            --accent: #6366f1;
-            --accent-hover: #4f46e5;
-            --success: #10b981;
-            --danger: #ef4444;
-            --border: #1e293b;
-            --radius: 14px;
+            /* ---- Palette: Prime Video — nero blu profondo, azzurro Prime, accenti neutri ---- */
+            --bg: #0F171E;
+            --bg-raised: #16212B;
+            --surface: #1A2733;
+            --surface-hover: #223342;
+            --surface-elevated: #1D2B38;
+            --border: rgba(255,255,255,0.09);
+            --border-soft: rgba(255,255,255,0.06);
+            --text: #FFFFFF;
+            --text-muted: #A9B7C2;
+            --text-faint: #6E7C88;
+
+            --prime: #00A8E1;
+            --prime-light: #4FC3F0;
+            --prime-dark: #007EB0;
+            --prime-text: #00131A;
+
+            --success: #3FD787;
+            --success-text: #00190D;
+            --danger: #FF5B65;
+
+            --radius-lg: 12px;
+            --radius-md: 8px;
+            --radius-sm: 6px;
+
+            --font-display: 'Manrope', sans-serif;
+            --font-body: 'Manrope', sans-serif;
+
+            --shadow-elevated: 0 24px 48px -18px rgba(0,0,0,0.8);
+            --shadow-soft: 0 12px 26px -12px rgba(0,0,0,0.65);
+
+            --nav-h: 60px;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Outfit', sans-serif;
         }
 
+        html { scroll-behavior: smooth; }
+
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            padding: 30px 20px;
+            font-family: var(--font-body);
+            background-color: var(--bg);
+            background-image: radial-gradient(ellipse 1000px 520px at 50% 0%, rgba(0,168,225,0.10), transparent 60%);
+            background-attachment: fixed;
+            color: var(--text);
             min-height: 100vh;
+            position: relative;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        button, input { font-family: inherit; }
+
+        button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
+            outline: 2px solid var(--prime);
+            outline-offset: 2px;
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 1240px;
             margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
 
-        header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        header h1 {
-            color: #fff;
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-            letter-spacing: -0.5px;
-        }
-
-        header h1 span {
-            color: var(--accent);
-        }
-
-        header p {
-            color: var(--text-muted);
-            font-size: 1rem;
-        }
-
-        /* Schermata Login/Auth */
+        /* ================= AUTH SCREEN ================= */
         #auth-screen {
             max-width: 400px;
-            margin: 80px auto;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            padding: 35px;
-            border-radius: var(--radius);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            margin: 0 auto;
+            min-height: 100vh;
             display: none;
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: center;
+            padding: 40px 28px;
+            position: relative;
+            z-index: 1;
+            animation: fadeUp 0.4s ease both;
         }
 
-        #auth-screen h2 {
-            margin-bottom: 20px;
-            font-size: 1.5rem;
+        .auth-mark {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--prime);
+            box-shadow: 0 0 0 6px rgba(0,168,225,0.14);
+        }
+        .auth-mark svg { width: 22px; height: 22px; fill: #fff; }
+
+        .auth-brand {
             text-align: center;
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: -0.02em;
+            margin-bottom: 28px;
+            color: var(--text);
+            text-transform: lowercase;
+        }
+        .auth-brand span { color: var(--prime); }
+
+        #auth-screen h2 {
+            font-weight: 800;
+            letter-spacing: -0.01em;
+            margin-bottom: 22px;
+            font-size: 1.3rem;
+            text-align: left;
+            color: #fff;
         }
 
         .auth-form {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 14px;
+        }
+
+        .field-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--bg-raised);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 0 14px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .field-wrap:focus-within {
+            border-color: var(--prime);
+            box-shadow: 0 0 0 3px rgba(0,168,225,0.16);
+        }
+
+        .field-wrap svg {
+            width: 17px;
+            height: 17px;
+            flex-shrink: 0;
+            color: var(--text-faint);
         }
 
         .auth-input {
-            background: var(--bg-color);
-            border: 1px solid var(--border);
-            color: var(--text-color);
-            padding: 12px 15px;
-            border-radius: 8px;
-            font-size: 1rem;
+            background: transparent;
+            border: none;
+            color: var(--text);
+            padding: 14px 0;
+            font-size: 0.95rem;
             outline: none;
+            width: 100%;
+            font-family: inherit;
         }
 
-        .auth-input:focus {
-            border-color: var(--accent);
-        }
+        .auth-input::placeholder { color: var(--text-faint); }
 
         .btn-auth {
-            background: var(--accent);
+            background: var(--prime);
             color: #fff;
             border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-weight: 600;
+            padding: 14px;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: 0.2px;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: background 0.2s, transform 0.15s;
+            margin-top: 6px;
         }
 
-        .btn-auth:hover {
-            background: var(--accent-hover);
-        }
+        .btn-auth:hover { background: var(--prime-light); }
+        .btn-auth:active { transform: translateY(1px); }
 
         .auth-switch {
-            margin-top: 15px;
+            margin-top: 20px;
             text-align: center;
-            font-size: 0.9rem;
+            font-size: 0.87rem;
             color: var(--text-muted);
         }
 
         .auth-switch span {
-            color: var(--accent);
+            color: var(--prime-light);
             cursor: pointer;
-            font-weight: 600;
+            font-weight: 700;
         }
+        .auth-switch span:hover { text-decoration: underline; }
 
         .auth-error {
             color: var(--danger);
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             text-align: center;
-            margin-top: 10px;
+            margin-top: 12px;
+            min-height: 1em;
         }
 
-        /* Top Bar App Loggata */
+        /* ================= TOPNAV (stile Prime Video) ================= */
+        .topnav {
+            position: sticky;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 200;
+            background: rgba(13,19,25,0.98);
+            border-bottom: 1px solid var(--border-soft);
+            backdrop-filter: blur(10px);
+        }
+
+        .topnav-inner {
+            max-width: 1240px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            padding: 0 20px;
+            height: var(--nav-h);
+        }
+
+        .brand {
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 1.15rem;
+            letter-spacing: -0.02em;
+            color: #fff;
+            text-transform: lowercase;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+        .brand .brand-mark {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--prime);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .brand .brand-mark svg { width: 11px; height: 11px; fill: #fff; }
+        .brand span { color: var(--prime); }
+
+        .tabs {
+            display: flex;
+            gap: 4px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+            flex: 1;
+            height: 100%;
+        }
+        .tabs::-webkit-scrollbar { display: none; }
+
+        .tab-btn {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            flex: 0 0 auto;
+            background: transparent;
+            color: var(--text-muted);
+            border: none;
+            border-bottom: 2px solid transparent;
+            padding: 0 4px;
+            height: 100%;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.87rem;
+            white-space: nowrap;
+            transition: color 0.2s, border-color 0.2s;
+        }
+        .tab-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+        .tab-btn:hover { color: var(--text); }
+
+        .tab-btn.active {
+            color: #fff;
+            border-bottom-color: var(--prime);
+        }
+
         .user-bar {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            padding: 10px 20px;
-            border-radius: var(--radius);
-            margin-bottom: 25px;
-            font-size: 0.9rem;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .user-bar-id {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            min-width: 0;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--prime), var(--prime-dark));
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .user-bar-id .user-email-text {
+            display: block;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 26vw;
         }
 
         .btn-logout {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
             background: transparent;
-            border: 1px solid var(--danger);
-            color: var(--danger);
-            padding: 6px 12px;
-            border-radius: 6px;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            width: 34px;
+            height: 34px;
+            border-radius: var(--radius-sm);
             cursor: pointer;
-            font-size: 0.85rem;
             transition: all 0.2s;
+            flex-shrink: 0;
         }
+        .btn-logout svg { width: 15px; height: 15px; }
+        .btn-logout .logout-label { display: none; }
 
         .btn-logout:hover {
-            background: var(--danger);
-            color: #fff;
+            background: rgba(255,91,101,0.12);
+            color: var(--danger);
+            border-color: var(--danger);
         }
 
-        /* Tabs e Contenuti App */
-        .tabs {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
+        @media (min-width: 860px) {
+            .btn-logout { width: auto; padding: 0 14px; gap: 7px; }
+            .btn-logout .logout-label { display: inline; font-size: 0.82rem; font-weight: 700; }
         }
 
-        .tab-btn {
-            background-color: var(--card-bg);
-            color: var(--text-muted);
-            border: 1px solid var(--border);
-            padding: 12px 24px;
-            border-radius: var(--radius);
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: all 0.25s ease;
+        /* ================= CONTENUTO ================= */
+        .content {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 28px 20px 60px;
         }
 
-        .tab-btn:hover {
-            color: var(--text-color);
-            border-color: var(--accent);
-        }
-
-        .tab-btn.active {
-            background-color: var(--accent);
-            color: #fff;
-            border-color: var(--accent);
-            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
-        }
-
-        .tab-content {
-            display: none;
-        }
+        .tab-content { display: none; }
 
         .tab-content.active {
             display: block;
-            animation: fadeIn 0.3s ease;
+            animation: fadeUp 0.35s ease;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
+        .section-heading {
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 1.3rem;
+            letter-spacing: -0.01em;
+            color: #fff;
+            margin-bottom: 18px;
+        }
+
+        /* ================= CARTELLE (solo "Da vedere") ================= */
+        .folder-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .folder-chip {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            background: var(--bg-raised);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 8px 8px 8px 14px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 0.82rem;
+            font-weight: 700;
+            white-space: nowrap;
+            transition: all 0.18s;
+        }
+
+        .folder-chip:hover { color: var(--text); border-color: var(--text-muted); }
+
+        .folder-chip.active {
+            background: var(--prime);
+            color: #fff;
+            border-color: var(--prime);
+        }
+
+        .folder-chip .folder-count {
+            opacity: 0.75;
+            font-weight: 600;
+        }
+
+        .folder-chip-remove {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.12);
+            color: inherit;
+            flex-shrink: 0;
+            font-size: 0.7rem;
+            line-height: 1;
+        }
+        .folder-chip.active .folder-chip-remove { background: rgba(0,0,0,0.2); }
+        .folder-chip-remove:hover { background: var(--danger) !important; color: #fff; }
+
+        .folder-chip-add {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: transparent;
+            border: 1px dashed var(--border);
+            color: var(--text-faint);
+            padding: 8px 14px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 0.82rem;
+            font-weight: 700;
+            white-space: nowrap;
+            transition: all 0.18s;
+        }
+        .folder-chip-add:hover { color: var(--prime-light); border-color: var(--prime); }
+        .folder-chip-add svg { width: 14px; height: 14px; }
+
+        .folder-add-form {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-raised);
+            border: 1px solid var(--prime);
+            border-radius: 999px;
+            padding: 4px 4px 4px 14px;
+        }
+
+        .folder-add-form input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text);
+            font-size: 0.82rem;
+            font-weight: 600;
+            width: 140px;
+            font-family: inherit;
+        }
+        .folder-add-form input::placeholder { color: var(--text-faint); }
+
+        .folder-add-form button {
+            border: none;
+            border-radius: 999px;
+            width: 26px;
+            height: 26px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+        .folder-add-confirm { background: var(--prime); color: #fff; }
+        .folder-add-confirm:hover { background: var(--prime-light); }
+        .folder-add-cancel { background: transparent; color: var(--text-faint); }
+        .folder-add-cancel:hover { color: var(--danger); }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* ================= RICERCA ================= */
         .search-wrapper {
             position: relative;
-            margin-bottom: 30px;
+            margin-bottom: 26px;
+            max-width: 460px;
         }
 
         .search-input-group {
             display: flex;
+            align-items: center;
             gap: 10px;
-            background: var(--card-bg);
+            background: var(--bg-raised);
             border: 1px solid var(--border);
-            padding: 8px;
-            border-radius: var(--radius);
-            transition: border-color 0.2s;
+            padding: 4px 16px;
+            border-radius: var(--radius-sm);
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
 
         .search-input-group:focus-within {
-            border-color: var(--accent);
+            border-color: var(--prime);
+            box-shadow: 0 0 0 3px rgba(0,168,225,0.14);
+        }
+
+        .search-input-group svg {
+            width: 18px;
+            height: 18px;
+            color: var(--text-faint);
+            flex-shrink: 0;
         }
 
         .search-input-group input {
             flex: 1;
             background: transparent;
             border: none;
-            color: var(--text-color);
-            padding: 10px 15px;
-            font-size: 1rem;
+            color: var(--text);
+            padding: 12px 2px;
+            font-size: 0.95rem;
             outline: none;
+            min-width: 0;
         }
+        .search-input-group input::placeholder { color: var(--text-faint); }
 
         .suggestions-dropdown {
             position: absolute;
             top: 100%;
             left: 0;
             right: 0;
-            background: var(--card-bg);
+            background: var(--surface-elevated);
             border: 1px solid var(--border);
-            border-radius: var(--radius);
+            border-radius: var(--radius-md);
             margin-top: 8px;
             max-height: 380px;
             overflow-y: auto;
             z-index: 100;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            box-shadow: var(--shadow-elevated);
             display: none;
         }
 
         .suggestion-item {
             display: flex;
             align-items: center;
-            gap: 15px;
-            padding: 12px 15px;
+            gap: 14px;
+            padding: 10px 14px;
             cursor: pointer;
-            border-bottom: 1px solid var(--border);
-            transition: background 0.15s;
+            border-bottom: 1px solid var(--border-soft);
+            border-left: 2px solid transparent;
+            transition: background 0.15s, border-color 0.15s;
         }
 
         .suggestion-item:last-child { border-bottom: none; }
-        .suggestion-item:hover { background: var(--card-hover); }
-
-        .suggestion-poster {
-            width: 45px;
-            height: 65px;
-            object-fit: cover;
-            border-radius: 6px;
-            background: var(--border);
+        .suggestion-item:hover {
+            background: var(--surface-hover);
+            border-left-color: var(--prime);
         }
 
-        .suggestion-info h4 { font-size: 0.95rem; margin-bottom: 4px; color: var(--text-color); }
-        .suggestion-info p { font-size: 0.8rem; color: var(--text-muted); }
+        .suggestion-poster {
+            width: 42px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+            background: var(--border);
+            flex-shrink: 0;
+        }
 
+        .suggestion-info { min-width: 0; }
+        .suggestion-info h4 {
+            font-size: 0.92rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .suggestion-info p {
+            font-size: 0.76rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            font-weight: 600;
+        }
+
+        /* ================= GRIGLIA & CARD (stile poster Prime Video) ================= */
         .items-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 18px 14px;
         }
 
         .media-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            overflow: hidden;
+            background-color: transparent;
+            border: none;
+            border-radius: var(--radius-md);
+            overflow: visible;
             display: flex;
             flex-direction: column;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .media-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
-            border-color: rgba(99, 102, 241, 0.4);
+            animation: fadeUp 0.4s ease both;
         }
 
         .media-poster-container {
             position: relative;
             width: 100%;
-            height: 180px;
-            background: var(--border);
+            aspect-ratio: 2 / 3;
+            background: var(--surface);
             overflow: hidden;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-soft);
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
         }
+
+        .media-card:hover .media-poster-container,
+        .media-poster-container:focus-visible {
+            transform: translateY(-4px) scale(1.035);
+            box-shadow: var(--shadow-elevated);
+            border-color: rgba(0,168,225,0.4);
+            z-index: 2;
+        }
+        .media-poster-container:focus-visible { outline: 2px solid var(--prime); outline-offset: 2px; }
 
         .media-poster {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: brightness(0.9);
+            display: block;
+            transition: filter 0.25s ease;
         }
+        .media-card:hover .media-poster { filter: brightness(1.05); }
+
+        .media-poster-container::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 62%, rgba(6,10,14,0.88) 100%);
+            pointer-events: none;
+        }
+
+        .poster-info-hint {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            background: rgba(6,10,14,0.32);
+            transition: opacity 0.2s ease;
+            pointer-events: none;
+        }
+        .media-card:hover .poster-info-hint,
+        .media-poster-container:focus-visible .poster-info-hint {
+            opacity: 1;
+        }
+        .poster-info-hint span {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: rgba(8,13,17,0.75);
+            border: 1px solid rgba(255,255,255,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(3px);
+        }
+        .poster-info-hint svg { width: 20px; height: 20px; color: #fff; }
 
         .media-type-badge {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(4px);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 600;
+            top: 8px;
+            left: 8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(8, 13, 17, 0.72);
+            backdrop-filter: blur(6px);
+            padding: 4px 8px 4px 6px;
+            border-radius: 4px;
+            font-size: 0.63rem;
+            font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border: 1px solid rgba(255,255,255,0.1);
+            letter-spacing: 0.4px;
+            border: 1px solid rgba(255,255,255,0.14);
+            z-index: 1;
         }
+        .media-type-badge svg { width: 10px; height: 10px; }
+        .media-type-badge.gold { color: var(--prime-light); border-color: rgba(0,168,225,0.4); }
+        .media-type-badge.success { color: var(--success); border-color: rgba(63,215,135,0.4); }
+        .media-type-badge.crimson { color: #FFB4B9; border-color: rgba(255,91,101,0.4); }
 
         .media-body {
-            padding: 18px;
+            padding: 10px 2px 0;
             display: flex;
             flex-direction: column;
             flex: 1;
-            justify-content: space-between;
+            gap: 10px;
         }
 
         .media-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 12px;
+            font-size: 0.86rem;
+            font-weight: 700;
             color: #fff;
             line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
         .tracker-controls {
-            background: var(--bg-color);
+            background: var(--bg-raised);
             border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 10px;
-            margin-bottom: 15px;
+            border-radius: var(--radius-sm);
+            padding: 9px 10px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 7px;
         }
 
         .tracker-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.85rem;
+            font-size: 0.76rem;
             color: var(--text-muted);
+            font-weight: 600;
         }
 
-        .tracker-row span b { color: var(--text-color); }
+        .tracker-row span b { color: var(--text); font-weight: 800; }
 
-        .counter-btns {
-            display: flex;
-            gap: 5px;
-        }
+        .counter-btns { display: flex; gap: 5px; }
 
         .btn-count {
-            background: var(--card-bg);
+            width: 26px;
+            height: 26px;
+            background: var(--surface);
             border: 1px solid var(--border);
-            color: var(--text-color);
-            padding: 4px 10px;
+            color: var(--text);
             border-radius: 6px;
             cursor: pointer;
             font-size: 0.8rem;
-            font-weight: 600;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             transition: all 0.15s;
         }
 
         .btn-count:hover {
-            border-color: var(--accent);
-            background: var(--accent);
+            border-color: var(--prime);
+            background: var(--prime);
             color: #fff;
         }
 
-        .card-actions {
-            display: flex;
-            gap: 8px;
-        }
+        .card-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+        .card-actions .btn-action { flex: 1 1 calc(50% - 3px); }
 
         .btn-action {
             flex: 1;
-            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            background: var(--bg-raised);
             border: 1px solid var(--border);
             color: var(--text-muted);
-            padding: 8px 12px;
-            border-radius: 8px;
+            padding: 8px 8px;
+            border-radius: var(--radius-sm);
             cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 500;
+            font-size: 0.76rem;
+            font-weight: 700;
             transition: all 0.2s;
-            text-align: center;
+            min-height: 36px;
         }
+        .btn-action svg { width: 13px; height: 13px; }
 
-        .btn-action:hover { color: #fff; border-color: var(--text-muted); }
-        .btn-action.success:hover { background: rgba(16, 185, 129, 0.15); border-color: var(--success); color: var(--success); }
-        .btn-action.danger:hover { background: rgba(239, 68, 68, 0.15); border-color: var(--danger); color: var(--danger); }
+        .btn-action:hover { color: var(--text); border-color: var(--text-muted); }
+        .btn-action.success:hover { background: rgba(63,215,135,0.12); border-color: var(--success); color: var(--success); }
+        .btn-action.danger:hover { background: rgba(255,91,101,0.12); border-color: var(--danger); color: var(--danger); }
 
         .empty-state {
             grid-column: 1 / -1;
             text-align: center;
-            padding: 40px;
+            padding: 60px 24px;
             color: var(--text-muted);
-            font-size: 0.95rem;
-            background: var(--card-bg);
+            font-size: 0.92rem;
+            background: var(--bg-raised);
             border: 1px dashed var(--border);
-            border-radius: var(--radius);
+            border-radius: var(--radius-lg);
         }
-    </style>
+        .empty-state svg {
+            width: 40px;
+            height: 40px;
+            color: var(--text-faint);
+            margin-bottom: 14px;
+        }
+        .empty-state p:first-of-type { color: var(--text); font-weight: 700; margin-bottom: 4px; }
+
+        /* ================= RESPONSIVE ================= */
+        @media (max-width: 640px) {
+            .topnav-inner { gap: 16px; padding: 0 14px; }
+            .brand span.brand-full { display: none; }
+            .content { padding: 20px 14px 50px; }
+            #auth-screen { padding: 32px 20px; }
+            .items-grid { grid-template-columns: repeat(auto-fill, minmax(128px, 1fr)); gap: 14px 10px; }
+            .user-bar-id .user-email-text { display: none; }
+        }
+
+        @media (max-width: 420px) {
+            .brand { font-size: 0; gap: 0; }
+            .brand .brand-mark { width: 28px; height: 28px; }
+        }
+
+        /* ================= MODALE DETTAGLI ================= */
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(6, 9, 12, 0.82);
+            backdrop-filter: blur(4px);
+            z-index: 500;
+            padding: 24px 16px;
+            overflow-y: auto;
+            animation: fadeUp 0.2s ease;
+        }
+        .modal-backdrop.open { display: flex; align-items: flex-start; justify-content: center; }
+
+        .modal-panel {
+            position: relative;
+            width: 100%;
+            max-width: 780px;
+            margin: auto;
+            background: linear-gradient(180deg, var(--surface-elevated), var(--bg-raised));
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-elevated);
+            overflow: hidden;
+            animation: modalPop 0.22s ease;
+        }
+
+        @keyframes modalPop {
+            from { opacity: 0; transform: translateY(14px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.18);
+            background: rgba(6,9,12,0.55);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 5;
+            transition: all 0.18s;
+        }
+        .modal-close svg { width: 16px; height: 16px; }
+        .modal-close:hover { background: var(--danger); border-color: var(--danger); }
+
+        .modal-loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            padding: 90px 24px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        .spinner {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: 3px solid var(--border);
+            border-top-color: var(--prime);
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .modal-error {
+            padding: 90px 24px;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .details-hero {
+            display: flex;
+            gap: 22px;
+            padding: 24px;
+        }
+
+        .details-poster {
+            width: 130px;
+            flex-shrink: 0;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            aspect-ratio: 2/3;
+            background: var(--surface);
+            border: 1px solid var(--border-soft);
+        }
+        .details-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+        .details-main { min-width: 0; flex: 1; }
+
+        .details-title {
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: -0.01em;
+            color: #fff;
+            margin-bottom: 4px;
+            padding-right: 40px;
+        }
+
+        .details-tagline {
+            color: var(--text-faint);
+            font-style: italic;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+        }
+
+        .details-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 14px;
+            margin-bottom: 14px;
+        }
+
+        .details-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+        .details-meta-item svg { width: 14px; height: 14px; color: var(--prime-light); }
+
+        .details-rating {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(0,168,225,0.14);
+            color: var(--prime-light);
+            border: 1px solid rgba(0,168,225,0.35);
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 800;
+        }
+
+        .details-genres {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+        .details-genre-tag {
+            background: var(--bg-raised);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 999px;
+        }
+
+        .details-section {
+            padding: 0 24px 24px;
+        }
+        .details-section + .details-section { padding-top: 0; }
+
+        .details-section h4 {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--text-faint);
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .details-overview {
+            color: var(--text);
+            font-size: 0.9rem;
+            line-height: 1.65;
+        }
+
+        .details-cast {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            scrollbar-width: thin;
+        }
+
+        .cast-card {
+            flex: 0 0 auto;
+            width: 84px;
+            text-align: center;
+        }
+        .cast-card img {
+            width: 84px;
+            height: 84px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: var(--surface);
+            border: 1px solid var(--border-soft);
+            margin-bottom: 6px;
+        }
+        .cast-card .cast-name {
+            font-size: 0.74rem;
+            font-weight: 700;
+            color: var(--text);
+            line-height: 1.25;
+        }
+        .cast-card .cast-role {
+            font-size: 0.68rem;
+            color: var(--text-faint);
+        }
+
+        .details-crew-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 28px;
+        }
+        .details-crew-item .label {
+            display: block;
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-faint);
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+        .details-crew-item .value {
+            font-size: 0.86rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        @media (max-width: 560px) {
+            .details-hero { flex-direction: column; padding: 20px 20px 0; }
+            .details-poster { width: 110px; }
+            .details-title { padding-right: 30px; font-size: 1.25rem; }
+            .details-section { padding: 20px 20px 20px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+</style>
 </head>
 <body>
 
     <!-- SCHERMATA LOGIN / REGISTRAZIONE -->
     <div id="auth-screen">
-        <h2 id="auth-title">Accedi a CinePulse</h2>
+        <div class="auth-mark">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+        <div class="auth-brand">dove<span>ero</span>rimasto</div>
+        <h2 id="auth-title">Accedi</h2>
         <div class="auth-form">
-            <input type="email" id="auth-email" class="auth-input" placeholder="Indirizzo Email">
-            <input type="password" id="auth-password" class="auth-input" placeholder="Password">
+            <div class="field-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg>
+                <input type="email" id="auth-email" class="auth-input" placeholder="Indirizzo email" autocomplete="email">
+            </div>
+            <div class="field-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                <input type="password" id="auth-password" class="auth-input" placeholder="Password" autocomplete="current-password">
+            </div>
             <button class="btn-auth" id="auth-submit-btn" onclick="handleAuthSubmit()">Accedi</button>
             <div id="auth-error" class="auth-error"></div>
         </div>
@@ -443,54 +1110,97 @@
     </div>
 
     <!-- SCHERMATA PRINCIPALE DELL'APP -->
-    <div id="app-screen" class="container" style="display: none;">
-        <header>
-            <h1>Cine<span>Pulse</span></h1>
-            <p>Tracker Cloud multi-utente con sincronizzazione Firebase</p>
-        </header>
-
-        <div class="user-bar">
-            <span>Connesso come: <b id="user-email-display"></b></span>
-            <button class="btn-logout" onclick="logoutUser()">Esci</button>
-        </div>
-
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('toWatch')">Film da Vedere</button>
-            <button class="tab-btn" onclick="switchTab('watched')">Film Visti</button>
-            <button class="tab-btn" onclick="switchTab('series')">Serie TV</button>
-        </div>
-
-        <!-- TAB: FILM DA VEDERE -->
-        <div id="toWatch" class="tab-content active">
-            <div class="search-wrapper">
-                <div class="search-input-group">
-                    <input type="text" id="inputToWatch" placeholder="Cerca un film da aggiungere..." oninput="handleSearch('toWatch', this.value)">
+    <div id="app-screen" style="display: none;">
+        <nav class="topnav">
+            <div class="topnav-inner">
+                <div class="brand">
+                    <span class="brand-mark"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+                    <span class="brand-full">dove<span>ero</span>rimasto</span>
                 </div>
-                <div id="dropdownToWatch" class="suggestions-dropdown"></div>
-            </div>
-            <div class="items-grid" id="gridToWatch"></div>
-        </div>
 
-        <!-- TAB: FILM VISTI -->
-        <div id="watched" class="tab-content">
-            <div class="search-wrapper">
-                <div class="search-input-group">
-                    <input type="text" id="inputWatched" placeholder="Cerca un film visto..." oninput="handleSearch('watched', this.value)">
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchTab('toWatch')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-6-4-6 4V3z"/></svg>
+                        Da Vedere
+                    </button>
+                    <button class="tab-btn" onclick="switchTab('watched')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="8.5 12 11 14.5 15.5 9.5"/></svg>
+                        Film Visti
+                    </button>
+                    <button class="tab-btn" onclick="switchTab('series')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><line x1="8" y1="22" x2="16" y2="22"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+                        Serie TV
+                    </button>
                 </div>
-                <div id="dropdownWatched" class="suggestions-dropdown"></div>
-            </div>
-            <div class="items-grid" id="gridWatched"></div>
-        </div>
 
-        <!-- TAB: SERIE TV -->
-        <div id="series" class="tab-content">
-            <div class="search-wrapper">
-                <div class="search-input-group">
-                    <input type="text" id="inputSeries" placeholder="Cerca una serie TV da seguire..." oninput="handleSearch('series', this.value)">
+                <div class="user-bar">
+                    <div class="user-bar-id">
+                        <div class="user-avatar" id="user-avatar">?</div>
+                        <span class="user-email-text" id="user-email-display"></span>
+                    </div>
+                    <button class="btn-logout" onclick="logoutUser()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                        <span class="logout-label">Esci</span>
+                    </button>
                 </div>
-                <div id="dropdownSeries" class="suggestions-dropdown"></div>
             </div>
-            <div class="items-grid" id="gridSeries"></div>
+        </nav>
+
+        <main class="content">
+            <!-- TAB: FILM DA VEDERE -->
+            <div id="toWatch" class="tab-content active">
+                <h2 class="section-heading">Da vedere</h2>
+                <div class="folder-bar" id="folderBar"></div>
+                <div class="search-wrapper">
+                    <div class="search-input-group">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="text" id="inputToWatch" placeholder="Titolo, attore, regista o anno..." oninput="handleSearch('toWatch', this.value)">
+                    </div>
+                    <div id="dropdownToWatch" class="suggestions-dropdown"></div>
+                </div>
+                <div class="items-grid" id="gridToWatch"></div>
+            </div>
+
+            <!-- TAB: FILM VISTI -->
+            <div id="watched" class="tab-content">
+                <h2 class="section-heading">Film visti</h2>
+                <div class="search-wrapper">
+                    <div class="search-input-group">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="text" id="inputWatched" placeholder="Titolo, attore, regista o anno..." oninput="handleSearch('watched', this.value)">
+                    </div>
+                    <div id="dropdownWatched" class="suggestions-dropdown"></div>
+                </div>
+                <div class="items-grid" id="gridWatched"></div>
+            </div>
+
+            <!-- TAB: SERIE TV -->
+            <div id="series" class="tab-content">
+                <h2 class="section-heading">Serie TV</h2>
+                <div class="search-wrapper">
+                    <div class="search-input-group">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="text" id="inputSeries" placeholder="Titolo, attore, regista o anno..." oninput="handleSearch('series', this.value)">
+                    </div>
+                    <div id="dropdownSeries" class="suggestions-dropdown"></div>
+                </div>
+                <div class="items-grid" id="gridSeries"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODALE DETTAGLI -->
+    <div id="details-modal" class="modal-backdrop" onclick="if(event.target===this) closeDetails()">
+        <div class="modal-panel">
+            <button class="modal-close" onclick="closeDetails()" aria-label="Chiudi">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+            <div id="details-body" class="modal-body">
+                <div class="modal-loading">
+                    <div class="spinner"></div>
+                    <p>Caricamento dettagli...</p>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -518,14 +1228,28 @@
         const TMDB_API_KEY = '19a3e7d1a5356e8daa2323dabc5e1a2d';
         const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 
+        // Icone SVG riutilizzate nelle card generate dinamicamente
+        const ICONS = {
+            check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+            trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 20 7"/><path d="M6 7l1 14a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-14"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg>',
+            film: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-6-4-6 4V3z"/></svg>',
+            tv: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><line x1="8" y1="22" x2="16" y2="22"/><line x1="12" y1="19" x2="12" y2="22"/></svg>',
+            info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16.5"/><circle cx="12" cy="7.5" r="0.5" fill="currentColor"/></svg>',
+            reel: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="24" cy="24" r="19"/><circle cx="24" cy="24" r="3.5"/><circle cx="24" cy="9" r="3"/><circle cx="37.5" cy="17.5" r="3"/><circle cx="32.5" cy="34" r="3"/><circle cx="15.5" cy="34" r="3"/><circle cx="10.5" cy="17.5" r="3"/></svg>'
+        };
+
         let currentUser = null;
         let isRegistering = false;
         let data = { toWatch: [], watched: [], series: [] };
 
+        const DEFAULT_FOLDER = 'Generale';
+        let activeFolder = DEFAULT_FOLDER;
+        let addingFolder = false;
+
         // Gestione Auth UI Mode (Login / Registrazione)
         window.toggleAuthMode = function() {
             isRegistering = !isRegistering;
-            document.getElementById('auth-title').innerText = isRegistering ? 'Registrati a CinePulse' : 'Accedi a CinePulse';
+            document.getElementById('auth-title').innerText = isRegistering ? 'Registrati' : 'Accedi';
             document.getElementById('auth-submit-btn').innerText = isRegistering ? 'Crea Account' : 'Accedi';
             document.getElementById('auth-switch-text').innerText = isRegistering ? 'Hai già un account? Accedi' : 'Non hai un account? Registrati';
             document.getElementById('auth-error').innerText = '';
@@ -559,6 +1283,7 @@
                 document.getElementById('auth-screen').style.display = 'none';
                 document.getElementById('app-screen').style.display = 'block';
                 document.getElementById('user-email-display').innerText = user.email;
+                document.getElementById('user-avatar').innerText = user.email.charAt(0).toUpperCase();
                 loadUserData(user.uid);
             } else {
                 currentUser = null;
@@ -611,23 +1336,126 @@
 
             searchTimeouts[section] = setTimeout(async () => {
                 try {
-                    let url = `https://api.themoviedb.org/3/search/multi?api_key=${TMDB_API_KEY}&language=it-IT&query=${encodeURIComponent(query)}`;
-                    const response = await fetch(url);
-                    const result = await response.json();
-
-                    let items = result.results.filter(item => item.media_type === 'movie' || item.media_type === 'tv');
-                    
-                    if (section === 'series') {
-                        items = items.sort((a, b) => (b.media_type === 'tv') - (a.media_type === 'tv'));
-                    } else {
-                        items = items.sort((a, b) => (b.media_type === 'movie') - (a.media_type === 'movie'));
-                    }
-
-                    showDropdown(section, items.slice(0, 6));
+                    const items = await performSmartSearch(query, section);
+                    showDropdown(section, items);
                 } catch (error) {
                     console.error('Errore TMDB:', error);
                 }
-            }, 300);
+            }, 320);
+        }
+
+        // Estrae un anno (es. "1994") dalla query, restituendo anche il testo rimanente
+        function extractYear(query) {
+            const match = query.match(/\b(19\d{2}|20\d{2})\b/);
+            if (!match) return { year: null, textQuery: query.trim() };
+            const year = match[0];
+            const textQuery = (query.slice(0, match.index) + query.slice(match.index + year.length))
+                .replace(/\s+/g, ' ').trim();
+            return { year, textQuery };
+        }
+
+        // Ricerca arricchita: titolo, attore/regista (persona) e anno
+        async function performSmartSearch(rawQuery, section) {
+            const { year, textQuery } = extractYear(rawQuery);
+            const tasks = [];
+
+            // 1. Ricerca per titolo (senza l'eventuale anno, per non "sporcare" la query)
+            if (textQuery.length >= 2) {
+                tasks.push(
+                    fetch(`https://api.themoviedb.org/3/search/multi?api_key=${TMDB_API_KEY}&language=it-IT&query=${encodeURIComponent(textQuery)}`)
+                        .then(r => r.json())
+                        .then(d => (d.results || [])
+                            .filter(it => it.media_type === 'movie' || it.media_type === 'tv')
+                            .map(it => ({ ...it, _match: 'title' })))
+                        .catch(() => [])
+                );
+            }
+
+            // 1b. Se c'è un anno insieme al testo (o la query è tutta numerica), prova anche la query originale
+            //     per non perdere titoli letterali come "1984" o corrispondenze fuzzy con l'anno incluso
+            if (year) {
+                tasks.push(
+                    fetch(`https://api.themoviedb.org/3/search/multi?api_key=${TMDB_API_KEY}&language=it-IT&query=${encodeURIComponent(rawQuery.trim())}`)
+                        .then(r => r.json())
+                        .then(d => (d.results || [])
+                            .filter(it => it.media_type === 'movie' || it.media_type === 'tv')
+                            .map(it => ({ ...it, _match: 'title' })))
+                        .catch(() => [])
+                );
+            }
+
+            // 2. Ricerca per persona: attore o regista
+            if (textQuery.length >= 2) {
+                tasks.push(
+                    fetch(`https://api.themoviedb.org/3/search/person?api_key=${TMDB_API_KEY}&language=it-IT&query=${encodeURIComponent(textQuery)}`)
+                        .then(r => r.json())
+                        .then(async d => {
+                            const person = (d.results || [])[0];
+                            if (!person) return [];
+                            const creditsRes = await fetch(`https://api.themoviedb.org/3/person/${person.id}/combined_credits?api_key=${TMDB_API_KEY}&language=it-IT`);
+                            const credits = await creditsRes.json();
+
+                            const cast = (credits.cast || [])
+                                .filter(c => c.media_type === 'movie' || c.media_type === 'tv')
+                                .map(c => ({ ...c, _match: 'cast', _person: person.name }));
+
+                            const directing = (credits.crew || [])
+                                .filter(c => (c.media_type === 'movie' || c.media_type === 'tv') && c.job === 'Director')
+                                .map(c => ({ ...c, _match: 'crew', _person: person.name }));
+
+                            return [...cast, ...directing]
+                                .sort((a, b) => (b.popularity || 0) - (a.popularity || 0))
+                                .slice(0, 6);
+                        })
+                        .catch(() => [])
+                );
+            }
+
+            // 3. Ricerca per solo anno (query composta unicamente da un anno)
+            if (year && textQuery.length < 2) {
+                tasks.push(
+                    fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${TMDB_API_KEY}&language=it-IT&primary_release_year=${year}&sort_by=popularity.desc`)
+                        .then(r => r.json())
+                        .then(d => (d.results || []).map(it => ({ ...it, media_type: 'movie', _match: 'year' })))
+                        .catch(() => [])
+                );
+                tasks.push(
+                    fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${TMDB_API_KEY}&language=it-IT&first_air_date_year=${year}&sort_by=popularity.desc`)
+                        .then(r => r.json())
+                        .then(d => (d.results || []).map(it => ({ ...it, media_type: 'tv', _match: 'year' })))
+                        .catch(() => [])
+                );
+            }
+
+            const groups = await Promise.all(tasks);
+            let merged = groups.flat();
+
+            // Deduplica per id+tipo, mantenendo la prima occorrenza (priorità: titolo > persona > anno)
+            const seen = new Set();
+            merged = merged.filter(it => {
+                const key = `${it.media_type}_${it.id}`;
+                if (seen.has(key)) return false;
+                seen.add(key);
+                return true;
+            });
+
+            // Se testo e anno sono presenti insieme, dai priorità ai risultati che corrispondono all'anno
+            if (year && textQuery.length >= 2) {
+                merged.sort((a, b) => {
+                    const aMatch = (a.release_date || a.first_air_date || '').startsWith(year) ? 0 : 1;
+                    const bMatch = (b.release_date || b.first_air_date || '').startsWith(year) ? 0 : 1;
+                    return aMatch - bMatch;
+                });
+            }
+
+            // Raggruppa per tipo pertinente alla sezione (film in evidenza per "toWatch"/"watched", serie per "series")
+            if (section === 'series') {
+                merged.sort((a, b) => (b.media_type === 'tv') - (a.media_type === 'tv'));
+            } else {
+                merged.sort((a, b) => (b.media_type === 'movie') - (a.media_type === 'movie'));
+            }
+
+            return merged.slice(0, 8);
         }
 
         function showDropdown(section, items) {
@@ -640,9 +1468,14 @@
             dropdown.innerHTML = items.map(item => {
                 const title = item.title || item.name;
                 const date = item.release_date || item.first_air_date || '';
-                const year = date ? `(${date.split('-')[0]})` : '';
+                const yearLabel = date ? date.split('-')[0] : '';
                 const poster = item.poster_path ? `${IMAGE_BASE_URL}${item.poster_path}` : 'https://via.placeholder.com/45x65?text=No+Img';
                 const typeLabel = item.media_type === 'tv' ? 'Serie TV' : 'Film';
+
+                let subtitle = typeLabel;
+                if (yearLabel) subtitle += ` · ${yearLabel}`;
+                if (item._match === 'cast') subtitle += ` · con ${item._person}`;
+                else if (item._match === 'crew') subtitle += ` · regia di ${item._person}`;
 
                 return `
                     <div class="suggestion-item" onclick='addItem("${section}", ${JSON.stringify({
@@ -653,8 +1486,8 @@
                     })})'>
                         <img src="${poster}" class="suggestion-poster" alt="${title}">
                         <div class="suggestion-info">
-                            <h4>${escapeHtml(title)} ${year}</h4>
-                            <p>${typeLabel}</p>
+                            <h4>${escapeHtml(title)}</h4>
+                            <p>${escapeHtml(subtitle)}</p>
                         </div>
                     </div>
                 `;
@@ -677,6 +1510,7 @@
                     tmdbId: itemData.id,
                     title: itemData.title,
                     poster: itemData.poster,
+                    type: 'tv',
                     season: 1,
                     episode: 1
                 });
@@ -685,14 +1519,17 @@
                     id: Date.now(),
                     tmdbId: itemData.id,
                     title: itemData.title,
-                    poster: itemData.poster
+                    poster: itemData.poster,
+                    type: itemData.type || 'movie',
+                    folder: activeFolder
                 });
             } else if (section === 'watched') {
                 data.watched.push({
                     id: Date.now(),
                     tmdbId: itemData.id,
                     title: itemData.title,
-                    poster: itemData.poster
+                    poster: itemData.poster,
+                    type: itemData.type || 'movie'
                 });
             }
 
@@ -711,6 +1548,234 @@
         window.deleteItem = function(section, id) {
             data[section] = data[section].filter(item => item.id !== id);
             saveDataToFirebase();
+        }
+
+        // ============ CARTELLE (solo tab "Da vedere") ============
+        function getToWatchFolders() {
+            // Elenco cartelle: 'Generale' sempre presente + tutte quelle usate dai film
+            const set = new Set([DEFAULT_FOLDER]);
+            (data.toWatch || []).forEach(m => set.add(m.folder || DEFAULT_FOLDER));
+            (data.toWatchFolders || []).forEach(f => set.add(f));
+            return Array.from(set);
+        }
+
+        window.selectFolder = function(name) {
+            activeFolder = name;
+            addingFolder = false;
+            renderAll();
+        }
+
+        window.showAddFolderForm = function() {
+            addingFolder = true;
+            renderAll();
+            const input = document.getElementById('newFolderInput');
+            if (input) input.focus();
+        }
+
+        window.cancelAddFolderForm = function() {
+            addingFolder = false;
+            renderAll();
+        }
+
+        window.confirmAddFolder = function() {
+            const input = document.getElementById('newFolderInput');
+            if (!input) return;
+            const name = input.value.trim();
+            if (!name) { addingFolder = false; renderAll(); return; }
+
+            if (!data.toWatchFolders) data.toWatchFolders = [];
+            if (!data.toWatchFolders.includes(name) && name !== DEFAULT_FOLDER) {
+                data.toWatchFolders.push(name);
+            }
+            activeFolder = name;
+            addingFolder = false;
+            saveDataToFirebase();
+            renderAll();
+        }
+
+        window.deleteFolder = function(name, evt) {
+            if (evt) evt.stopPropagation();
+            if (name === DEFAULT_FOLDER) return;
+            if (!confirm(`Eliminare la cartella "${name}"? I film verranno spostati in "${DEFAULT_FOLDER}".`)) return;
+
+            (data.toWatch || []).forEach(m => {
+                if ((m.folder || DEFAULT_FOLDER) === name) m.folder = DEFAULT_FOLDER;
+            });
+            data.toWatchFolders = (data.toWatchFolders || []).filter(f => f !== name);
+            if (activeFolder === name) activeFolder = DEFAULT_FOLDER;
+            saveDataToFirebase();
+            renderAll();
+        }
+
+        function renderFolderBar() {
+            const bar = document.getElementById('folderBar');
+            if (!bar) return;
+            const folders = getToWatchFolders();
+
+            let html = folders.map(name => {
+                const count = (data.toWatch || []).filter(m => (m.folder || DEFAULT_FOLDER) === name).length;
+                const isActive = name === activeFolder;
+                const removeBtn = name === DEFAULT_FOLDER ? '' :
+                    `<span class="folder-chip-remove" onclick="deleteFolder('${escapeHtml(name).replace(/'/g, "\\'")}', event)">✕</span>`;
+                return `
+                    <div class="folder-chip ${isActive ? 'active' : ''}" onclick="selectFolder('${escapeHtml(name).replace(/'/g, "\\'")}')">
+                        <span>${escapeHtml(name)}</span>
+                        <span class="folder-count">${count}</span>
+                        ${removeBtn}
+                    </div>
+                `;
+            }).join('');
+
+            if (addingFolder) {
+                html += `
+                    <div class="folder-add-form">
+                        <input type="text" id="newFolderInput" placeholder="Nome cartella..." maxlength="30"
+                            onkeydown="if(event.key==='Enter') confirmAddFolder(); if(event.key==='Escape') cancelAddFolderForm();">
+                        <button class="folder-add-confirm" onclick="confirmAddFolder()">✓</button>
+                        <button class="folder-add-cancel" onclick="cancelAddFolderForm()">✕</button>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <button class="folder-chip-add" onclick="showAddFolderForm()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        Nuova cartella
+                    </button>
+                `;
+            }
+
+            bar.innerHTML = html;
+        }
+
+        // ============ MODALE DETTAGLI (TMDB) ============
+        window.showDetails = async function(tmdbId, type) {
+            const modal = document.getElementById('details-modal');
+            const body = document.getElementById('details-body');
+            const mediaType = type === 'tv' ? 'tv' : 'movie';
+
+            body.innerHTML = `
+                <div class="modal-loading">
+                    <div class="spinner"></div>
+                    <p>Caricamento dettagli...</p>
+                </div>
+            `;
+            modal.classList.add('open');
+            document.body.style.overflow = 'hidden';
+
+            try {
+                const url = `https://api.themoviedb.org/3/${mediaType}/${tmdbId}?api_key=${TMDB_API_KEY}&language=it-IT&append_to_response=credits`;
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('Richiesta non riuscita');
+                const details = await response.json();
+                renderDetails(details, mediaType);
+            } catch (error) {
+                console.error('Errore dettagli TMDB:', error);
+                body.innerHTML = `
+                    <div class="modal-error">
+                        <p>Non è stato possibile caricare i dettagli. Riprova più tardi.</p>
+                    </div>
+                `;
+            }
+        }
+
+        window.closeDetails = function() {
+            document.getElementById('details-modal').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeDetails();
+        });
+
+        function renderDetails(d, mediaType) {
+            const body = document.getElementById('details-body');
+            const title = d.title || d.name || '';
+            const poster = d.poster_path ? IMAGE_BASE_URL + d.poster_path : 'https://via.placeholder.com/300x450?text=No+Image';
+            const year = (d.release_date || d.first_air_date || '').split('-')[0] || '—';
+            const genres = (d.genres || []).map(g => g.name);
+            const rating = d.vote_average ? d.vote_average.toFixed(1) : null;
+
+            let runtimeLabel = '';
+            if (mediaType === 'movie') {
+                const mins = d.runtime;
+                runtimeLabel = mins ? `${Math.floor(mins / 60)}h ${mins % 60}min` : null;
+            } else {
+                const ep = d.episode_run_time && d.episode_run_time.length ? d.episode_run_time[0] : null;
+                runtimeLabel = ep ? `~${ep} min/episodio` : null;
+            }
+
+            const crew = (d.credits && d.credits.crew) || [];
+            const cast = (d.credits && d.credits.cast) || [];
+
+            let crewItems = '';
+            if (mediaType === 'movie') {
+                const directors = crew.filter(c => c.job === 'Director').map(c => c.name);
+                if (directors.length) {
+                    crewItems += `<div class="details-crew-item"><span class="label">Regia</span><span class="value">${escapeHtml(directors.join(', '))}</span></div>`;
+                }
+            } else {
+                const creators = (d.created_by || []).map(c => c.name);
+                if (creators.length) {
+                    crewItems += `<div class="details-crew-item"><span class="label">Creato da</span><span class="value">${escapeHtml(creators.join(', '))}</span></div>`;
+                }
+                crewItems += `<div class="details-crew-item"><span class="label">Stagioni</span><span class="value">${d.number_of_seasons ?? '—'}</span></div>`;
+                crewItems += `<div class="details-crew-item"><span class="label">Episodi</span><span class="value">${d.number_of_episodes ?? '—'}</span></div>`;
+                if (d.status) {
+                    crewItems += `<div class="details-crew-item"><span class="label">Stato</span><span class="value">${escapeHtml(d.status)}</span></div>`;
+                }
+            }
+
+            const metaItems = [];
+            metaItems.push(`<div class="details-meta-item">${ICONS.reel}<span>${year}</span></div>`);
+            if (runtimeLabel) {
+                metaItems.push(`<div class="details-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg><span>${runtimeLabel}</span></div>`);
+            }
+
+            const castHtml = cast.slice(0, 8).map(actor => {
+                const img = actor.profile_path ? IMAGE_BASE_URL + actor.profile_path : 'https://via.placeholder.com/84x84?text=%20';
+                return `
+                    <div class="cast-card">
+                        <img src="${img}" alt="${escapeHtml(actor.name)}" loading="lazy">
+                        <div class="cast-name">${escapeHtml(actor.name)}</div>
+                        <div class="cast-role">${escapeHtml(actor.character || '')}</div>
+                    </div>
+                `;
+            }).join('');
+
+            body.innerHTML = `
+                <div class="details-hero">
+                    <div class="details-poster">
+                        <img src="${poster}" alt="${escapeHtml(title)}">
+                    </div>
+                    <div class="details-main">
+                        <div class="details-title">${escapeHtml(title)}</div>
+                        ${d.tagline ? `<div class="details-tagline">${escapeHtml(d.tagline)}</div>` : ''}
+                        <div class="details-meta">
+                            ${metaItems.join('')}
+                            ${rating ? `<span class="details-rating">★ ${rating}</span>` : ''}
+                        </div>
+                        ${genres.length ? `<div class="details-genres">${genres.map(g => `<span class="details-genre-tag">${escapeHtml(g)}</span>`).join('')}</div>` : ''}
+                    </div>
+                </div>
+
+                ${d.overview ? `
+                <div class="details-section">
+                    <h4>Trama</h4>
+                    <p class="details-overview">${escapeHtml(d.overview)}</p>
+                </div>` : ''}
+
+                ${crewItems ? `
+                <div class="details-section">
+                    <h4>Info</h4>
+                    <div class="details-crew-row">${crewItems}</div>
+                </div>` : ''}
+
+                ${castHtml ? `
+                <div class="details-section">
+                    <h4>Cast</h4>
+                    <div class="details-cast">${castHtml}</div>
+                </div>` : ''}
+            `;
         }
 
         window.updateProgress = function(id, seasonChange, episodeChange) {
@@ -744,20 +1809,28 @@
             if(!data.watched) data.watched = [];
             if(!data.series) data.series = [];
 
-            // 1. To Watch
+            // 1. To Watch (filtrato per cartella attiva)
+            renderFolderBar();
+            const toWatchFiltered = data.toWatch.filter(m => (m.folder || DEFAULT_FOLDER) === activeFolder);
             const gridToWatch = document.getElementById('gridToWatch');
-            gridToWatch.innerHTML = data.toWatch.length === 0 ? '<div class="empty-state">Nessun film in lista.</div>' : 
-                data.toWatch.map(m => `
+            gridToWatch.innerHTML = toWatchFiltered.length === 0 ? `
+                <div class="empty-state">
+                    ${ICONS.reel}
+                    <p>Nessun film in questa cartella</p>
+                    <p>Cerca un titolo qui sopra per aggiungerlo a "${escapeHtml(activeFolder)}".</p>
+                </div>` :
+                toWatchFiltered.map(m => `
                     <div class="media-card">
-                        <div class="media-poster-container">
+                        <div class="media-poster-container" onclick="showDetails(${m.tmdbId}, '${m.type || 'movie'}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showDetails(${m.tmdbId}, '${m.type || 'movie'}');}" role="button" tabindex="0" aria-label="Dettagli di ${escapeHtml(m.title)}">
                             <img src="${m.poster ? IMAGE_BASE_URL + m.poster : 'https://via.placeholder.com/300x180?text=No+Image'}" class="media-poster" alt="${m.title}">
-                            <span class="media-type-badge">Film</span>
+                            <span class="media-type-badge gold">${ICONS.film} Film</span>
+                            <span class="poster-info-hint"><span>${ICONS.info}</span></span>
                         </div>
                         <div class="media-body">
                             <div class="media-title">${escapeHtml(m.title)}</div>
                             <div class="card-actions">
-                                <button class="btn-action success" onclick="moveToWatched(${m.id})">Visto ✓</button>
-                                <button class="btn-action danger" onclick="deleteItem('toWatch', ${m.id})">Elimina</button>
+                                <button class="btn-action success" onclick="moveToWatched(${m.id})">${ICONS.check} Visto</button>
+                                <button class="btn-action danger" onclick="deleteItem('toWatch', ${m.id})">${ICONS.trash} Elimina</button>
                             </div>
                         </div>
                     </div>
@@ -765,17 +1838,23 @@
 
             // 2. Watched
             const gridWatched = document.getElementById('gridWatched');
-            gridWatched.innerHTML = data.watched.length === 0 ? '<div class="empty-state">Nessun film visto registrato.</div>' : 
+            gridWatched.innerHTML = data.watched.length === 0 ? `
+                <div class="empty-state">
+                    ${ICONS.reel}
+                    <p>Nessun film visto registrato</p>
+                    <p>I titoli segnati come "Visto" compariranno qui.</p>
+                </div>` :
                 data.watched.map(m => `
                     <div class="media-card">
-                        <div class="media-poster-container">
+                        <div class="media-poster-container" onclick="showDetails(${m.tmdbId}, '${m.type || 'movie'}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showDetails(${m.tmdbId}, '${m.type || 'movie'}');}" role="button" tabindex="0" aria-label="Dettagli di ${escapeHtml(m.title)}">
                             <img src="${m.poster ? IMAGE_BASE_URL + m.poster : 'https://via.placeholder.com/300x180?text=No+Image'}" class="media-poster" alt="${m.title}">
-                            <span class="media-type-badge">Film Visto</span>
+                            <span class="media-type-badge success">${ICONS.check} Visto</span>
+                            <span class="poster-info-hint"><span>${ICONS.info}</span></span>
                         </div>
                         <div class="media-body">
                             <div class="media-title">${escapeHtml(m.title)}</div>
                             <div class="card-actions">
-                                <button class="btn-action danger" onclick="deleteItem('watched', ${m.id})">Elimina</button>
+                                <button class="btn-action danger" onclick="deleteItem('watched', ${m.id})">${ICONS.trash} Elimina</button>
                             </div>
                         </div>
                     </div>
@@ -783,12 +1862,18 @@
 
             // 3. Series
             const gridSeries = document.getElementById('gridSeries');
-            gridSeries.innerHTML = data.series.length === 0 ? '<div class="empty-state">Nessuna serie TV in corso.</div>' : 
+            gridSeries.innerHTML = data.series.length === 0 ? `
+                <div class="empty-state">
+                    ${ICONS.reel}
+                    <p>Nessuna serie TV in corso</p>
+                    <p>Aggiungi una serie per iniziare a tracciare stagione ed episodio.</p>
+                </div>` :
                 data.series.map(s => `
                     <div class="media-card">
-                        <div class="media-poster-container">
+                        <div class="media-poster-container" onclick="showDetails(${s.tmdbId}, 'tv')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showDetails(${s.tmdbId}, 'tv');}" role="button" tabindex="0" aria-label="Dettagli di ${escapeHtml(s.title)}">
                             <img src="${s.poster ? IMAGE_BASE_URL + s.poster : 'https://via.placeholder.com/300x180?text=No+Image'}" class="media-poster" alt="${s.title}">
-                            <span class="media-type-badge">Serie TV</span>
+                            <span class="media-type-badge crimson">${ICONS.tv} Serie TV</span>
+                            <span class="poster-info-hint"><span>${ICONS.info}</span></span>
                         </div>
                         <div class="media-body">
                             <div class="media-title">${escapeHtml(s.title)}</div>
@@ -796,20 +1881,20 @@
                                 <div class="tracker-row">
                                     <span>Stagione: <b>${s.season}</b></span>
                                     <div class="counter-btns">
-                                        <button class="btn-count" onclick="updateSeasonManual(${s.id}, -1)">-</button>
+                                        <button class="btn-count" onclick="updateSeasonManual(${s.id}, -1)">−</button>
                                         <button class="btn-count" onclick="updateSeasonManual(${s.id}, 1)">+</button>
                                     </div>
                                 </div>
                                 <div class="tracker-row">
                                     <span>Episodio: <b>${s.episode}</b></span>
                                     <div class="counter-btns">
-                                        <button class="btn-count" onclick="updateProgress(${s.id}, 0, -1)">-</button>
-                                        <button class="btn-count" onclick="updateProgress(${s.id}, 0, 1)">+1</button>
+                                        <button class="btn-count" onclick="updateProgress(${s.id}, 0, -1)">−</button>
+                                        <button class="btn-count" onclick="updateProgress(${s.id}, 0, 1)">+</button>
                                     </div>
                                 </div>
                             </div>
                             <div class="card-actions">
-                                <button class="btn-action danger" onclick="deleteItem('series', ${s.id})">Elimina</button>
+                                <button class="btn-action danger" onclick="deleteItem('series', ${s.id})">${ICONS.trash} Elimina</button>
                             </div>
                         </div>
                     </div>
