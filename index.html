@@ -1312,7 +1312,10 @@
         function saveDataToFirebase() {
             if (!currentUser) return;
             const userRef = ref(db, 'users/' + currentUser.uid);
-            set(userRef, data);
+            return set(userRef, data).catch((err) => {
+                console.error('Errore salvataggio Firebase:', err);
+                alert('Salvataggio non riuscito: ' + (err && err.message ? err.message : err) + '\n\nL\'elemento potrebbe non essere stato salvato. Riprova o controlla la connessione/regole del database.');
+            });
         }
 
         // Navigazione Tab
@@ -1465,7 +1468,8 @@
                 return;
             }
 
-            dropdown.innerHTML = items.map(item => {
+            dropdown.innerHTML = '';
+            items.forEach(item => {
                 const title = item.title || item.name;
                 const date = item.release_date || item.first_air_date || '';
                 const yearLabel = date ? date.split('-')[0] : '';
@@ -1477,23 +1481,31 @@
                 if (item._match === 'cast') subtitle += ` · con ${item._person}`;
                 else if (item._match === 'crew') subtitle += ` · regia di ${item._person}`;
 
-                return `
-                    <div class="suggestion-item" onclick='addItem("${section}", ${JSON.stringify({
+                const el = document.createElement('div');
+                el.className = 'suggestion-item';
+                el.innerHTML = `
+                    <img src="${poster}" class="suggestion-poster" alt="${escapeHtml(title)}">
+                    <div class="suggestion-info">
+                        <h4>${escapeHtml(title)}</h4>
+                        <p>${escapeHtml(subtitle)}</p>
+                    </div>
+                `;
+                el.addEventListener('click', () => {
+                    addItem(section, {
                         id: item.id,
                         title: title,
                         poster: item.poster_path,
                         type: item.media_type
-                    })})'>
-                        <img src="${poster}" class="suggestion-poster" alt="${title}">
-                        <div class="suggestion-info">
-                            <h4>${escapeHtml(title)}</h4>
-                            <p>${escapeHtml(subtitle)}</p>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+                    });
+                });
+                dropdown.appendChild(el);
+            });
 
             dropdown.style.display = 'block';
+        }
+
+        function generateUniqueId() {
+            return (crypto.randomUUID ? crypto.randomUUID() : (Date.now() + '-' + Math.random().toString(36).slice(2)));
         }
 
         window.addItem = function(section, itemData) {
@@ -1506,7 +1518,7 @@
 
             if (section === 'series') {
                 data.series.push({
-                    id: Date.now(),
+                    id: generateUniqueId(),
                     tmdbId: itemData.id,
                     title: itemData.title,
                     poster: itemData.poster,
@@ -1516,7 +1528,7 @@
                 });
             } else if (section === 'toWatch') {
                 data.toWatch.push({
-                    id: Date.now(),
+                    id: generateUniqueId(),
                     tmdbId: itemData.id,
                     title: itemData.title,
                     poster: itemData.poster,
@@ -1525,7 +1537,7 @@
                 });
             } else if (section === 'watched') {
                 data.watched.push({
-                    id: Date.now(),
+                    id: generateUniqueId(),
                     tmdbId: itemData.id,
                     title: itemData.title,
                     poster: itemData.poster,
